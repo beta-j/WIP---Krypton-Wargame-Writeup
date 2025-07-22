@@ -23,14 +23,23 @@
 > Here is an example:
 >
 > krypton2@melinda:~$ mktemp -d
+> 
 > /tmp/tmp.Wf2OnCpCDQ
+>
 > krypton2@melinda:~$ cd /tmp/tmp.Wf2OnCpCDQ
+>
 > krypton2@melinda:/tmp/tmp.Wf2OnCpCDQ$ ln -s /krypton/krypton2/keyfile.dat
+>
 > krypton2@melinda:/tmp/tmp.Wf2OnCpCDQ$ ls
+>
 > keyfile.dat
+>
 > krypton2@melinda:/tmp/tmp.Wf2OnCpCDQ$ chmod 777 .
+>
 > krypton2@melinda:/tmp/tmp.Wf2OnCpCDQ$ /krypton/krypton2/encrypt /etc/issue
+>
 > krypton2@melinda:/tmp/tmp.Wf2OnCpCDQ$ ls
+>
 > ciphertext  keyfile.dat
 
 ## Log-In Info
