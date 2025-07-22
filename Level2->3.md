@@ -52,4 +52,48 @@ ssh krypton2@krypton.labs.overthewire.org -p 2231
 ```
 
 ## Procedure
-From the l
+Looking into the directory `/krypton/krypton2` we are presented with a `keyfile.dat` a binary called `encrypt` and a file called `krypton3` which we are told contains the password for the next level encrypted with the `encrypt` binary.
+
+We can follow the steps in the level info to create a temporary directory and a symlink to `keyfile.dat`:
+
+```console
+krypton2@bandit:~$ mktemp -d
+/tmp/tmp.1NUJxzSICZ
+krypton2@bandit:~$ cd /tmp/tmp.1NUJxzSICZ
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ ln -s /krypton/krypton2/k
+keyfile.dat  krypton3
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ ln -s /krypton/krypton2/keyfile.dat
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ ls
+keyfile.dat
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ chmod 777
+chmod: missing operand after ‘777’
+Try 'chmod --help' for more information.
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ chmod 777 .
+```
+
+Since we know that this is a simple Caeser cipher, we can simply encrypt the whole alphabet and use it's inverse to decrypt the ciphertext.
+
+```console
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ touch plaintext
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ echo "ABCDEFGHIJKLMNOPQRSTUVWXYZ" >> plaintext
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ /krypton/krypton2/encrypt plaintext
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ ls
+ciphertext  keyfile.dat  plaintext
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ cat ciphertext
+MNOPQRSTUVWXYZABCDEFGHIJKL
+```
+
+So now we know that `ABCDEFGHIJKLMNOPQRSTUVWXYZ` is encrypted to `MNOPQRSTUVWXYZABCDEFGHIJKL`
+
+So the inverse should also true:
+```
+Ciphertext:  M N O P Q R S T U V W X Y Z A B C D E F G H I J K L
+Plaintext:   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+```
+
+```console
+krypton2@bandit:/tmp/tmp.1NUJxzSICZ$ cat /krypton/krypton2/krypton3
+OMQEMDUEQMEK
+```
+
+So we can change each letter in the encrypted password `OMQEMDUEQMEK` to its corresponding plaintext letter, So "O" becomes "C", "M" becomes "A", etc.. and we get our password:  `CAESARISEASY`
